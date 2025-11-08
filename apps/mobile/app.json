@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "Reent",
+    "slug": "reent",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/reent_splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.reent.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Allow Reent to use your location to show nearby properties.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow Reent to use your location to show nearby properties even when the app is in the background."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.reent.app",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "plugins": [
+      "expo-location",
+      "expo-image-picker"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "0bbb5ee2-9de3-4757-b0df-262f34d9942d"
+      }
+    },
+    "owner": "dero-dev"
+  }
+}
