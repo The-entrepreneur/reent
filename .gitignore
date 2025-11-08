@@ -3,3 +3,10 @@ data/
 .env
 *.pyc
 __pycache__/
+
+#
+local-dev-setup-guide.md
+docker-compose.yml
+.gitignore
+.git
+.cursor/
