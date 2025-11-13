@@ -1,7 +1,7 @@
 {
   "name": "reent",
   "version": "1.0.0",
-  "description": "",
+  "description": "Experience Reent 2.0 - A cutting-edge hybrid marketplace for property rentals built on Modern Security, Verified+ Market Dealers, Reliability and Inter-Connectivity.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
