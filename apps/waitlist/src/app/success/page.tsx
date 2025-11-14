@@ -189,7 +189,7 @@ export default function SuccessPage() {
       <footer className="py-8 border-t border-gray-200">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <p className="text-gray-600 text-sm">
-            © 2025 Reent. All rights reserved. Powered by Dev Work's Enterprise
+            © 2025 Reent. All rights reserved. Powered by Dev Works Enterprise
           </p>
         </div>
       </footer>
