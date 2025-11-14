@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "builds": [{ "src": "package.json", "use": "@vercel/next" }],
+  "framework": "nextjs",
+  "installCommand": "pnpm install --filter ./apps/waitlist",
+  "buildCommand": "pnpm --filter ./apps/waitlist build",
+  "outputDirectory": ".next",
+  "env": {
+    "NEXT_TELEMETRY_DISABLED": "1"
+  }
+}

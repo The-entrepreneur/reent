@@ -1,4 +1,9 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - "apps/waitlist"
+  - "apps/web"
+  - "apps/admin"
+  - "packages/*"
 
+#Tag-out when ready for production on mobile
+neverBuiltDependencies:
+  - "apps/mobile"
