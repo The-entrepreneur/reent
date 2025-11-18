@@ -1,11 +1,22 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
-import { ArrowRight, CheckCircle, Star, Users, Calendar } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import {
+  ArrowRight,
+  CheckCircle,
+  Star,
+  Users,
+  Calendar,
+  Trophy,
+} from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Analytics } from "@vercel/analytics/react";
+import { supabase } from "@/lib/supabase";
+import { handleUserSignup, getLeaderboard, maskUserName } from "@/lib/referral";
 
-export default function WaitlistPage() {
+function WaitlistContent() {
+  <Analytics />;
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -15,34 +26,61 @@ export default function WaitlistPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [leaderboard, setLeaderboard] = useState<
+    Array<{
+      full_name: string;
+      role: string;
+      referral_count: number;
+      masked_name: string;
+    }>
+  >([]);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const referralCode = searchParams?.get("ref");
+
+  useEffect(() => {
+    // Load leaderboard on component mount
+    const loadLeaderboard = async () => {
+      const data = await getLeaderboard();
+      setLeaderboard(data);
+    };
+    loadLeaderboard();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
 
     try {
-      // TODO: Replace with actual Supabase submission
-      console.log("Submitting to Supabase:", formData);
+      // Validate required fields
+      if (
+        !formData.fullName ||
+        !formData.email ||
+        !formData.phone ||
+        !formData.state ||
+        !formData.role
+      ) {
+        throw new Error("Please fill in all required fields");
+      }
 
-      // Simulate API call to Supabase
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        throw new Error("Please enter a valid email address");
+      }
 
-      // TODO: Uncomment and implement actual Supabase submission
-      // const { data, error } = await supabase
-      //   .from('waitlist')
-      //   .insert([
-      //     {
-      //       full_name: formData.fullName,
-      //       email: formData.email,
-      //       phone: formData.phone,
-      //       state: formData.state,
-      //       role: formData.role,
-      //       created_at: new Date().toISOString(),
-      //     }
-      //   ]);
+      // Use referral system for signup
+      const result = await handleUserSignup(
+        formData,
+        referralCode || undefined,
+      );
 
-      // if (error) throw error;
+      if (!result.success) {
+        throw new Error(result.error || "Failed to join waitlist");
+      }
 
       setIsSubmitted(true);
 
@@ -50,12 +88,13 @@ export default function WaitlistPage() {
       setTimeout(() => {
         router.push("/success");
       }, 2000);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting to waitlist:", error);
-      // TODO: Add proper error handling UI
-      alert(
-        "There was an error submitting your information. Please try again.",
-      );
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "There was an error submitting your information. Please try again.";
+      setSubmitError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -272,6 +311,15 @@ export default function WaitlistPage() {
                   </label>
                 </div>
 
+                {/* Error Message */}
+                {submitError && (
+                  <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-center">
+                    <p className="text-red-700 text-sm font-medium">
+                      {submitError}
+                    </p>
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -311,12 +359,117 @@ export default function WaitlistPage() {
           </div>
 
           {/* Social Proof */}
-          <div className="flex items-center justify-center space-x-4 text-gray-600">
+          <div className="flex items-center justify-center space-x-4 text-gray-600 mb-8">
             <Users className="w-5 h-5" />
             <span className="text-lg font-medium">147+ Early adopters</span>
           </div>
+
+          {/* Leaderboard Toggle */}
+          <div className="text-center">
+            <button
+              onClick={() => setShowLeaderboard(!showLeaderboard)}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              <Trophy className="w-5 h-5" />
+              {showLeaderboard ? "Hide" : "Show"} Top Referrers
+            </button>
+          </div>
         </div>
       </section>
+
+      {/* Leaderboard Section */}
+      {showLeaderboard && leaderboard.length > 0 && (
+        <section className="py-12 bg-gradient-to-br from-orange-50 to-blue-50 border-t border-b border-orange-100">
+          <div className="max-w-4xl mx-auto px-6">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                🏆 Top Referrers Leaderboard
+              </h2>
+              <p className="text-gray-600">
+                Our most active community members helping grow Reent
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-lg overflow-hidden">
+              <div className="grid grid-cols-12 gap-4 p-6 bg-gray-50 border-b border-gray-200 font-semibold text-gray-700">
+                <div className="col-span-1">Rank</div>
+                <div className="col-span-6">Name</div>
+                <div className="col-span-3">Role</div>
+                <div className="col-span-2 text-right">Referrals</div>
+              </div>
+
+              {leaderboard.map((user, index) => (
+                <div
+                  key={index}
+                  className={`grid grid-cols-12 gap-4 p-6 border-b border-gray-100 last:border-b-0 ${
+                    index < 3
+                      ? "bg-gradient-to-r from-orange-50 to-yellow-50"
+                      : ""
+                  }`}
+                >
+                  <div className="col-span-1 flex items-center">
+                    {index === 0 && (
+                      <Trophy className="w-5 h-5 text-yellow-500" />
+                    )}
+                    {index === 1 && (
+                      <Trophy className="w-5 h-5 text-gray-400" />
+                    )}
+                    {index === 2 && (
+                      <Trophy className="w-5 h-5 text-orange-700" />
+                    )}
+                    {index > 2 && (
+                      <span className="text-gray-500 font-medium">
+                        {index + 1}
+                      </span>
+                    )}
+                  </div>
+                  <div className="col-span-6 font-medium text-gray-900">
+                    {user.masked_name}
+                  </div>
+                  <div className="col-span-3">
+                    <span
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                        user.role === "agent"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-green-100 text-green-800"
+                      }`}
+                    >
+                      {user.role === "agent" ? "🏢 Agent" : "🏠 Renter"}
+                    </span>
+                  </div>
+                  <div className="col-span-2 text-right font-bold text-[#FF5F1F]">
+                    {user.referral_count}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Rewards Info */}
+            <div className="mt-8 text-center">
+              <div className="bg-white border-2 border-orange-200 rounded-xl p-6 max-w-2xl mx-auto">
+                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                  🎁 Exclusive Rewards
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+                  <div className="text-left">
+                    <p className="font-semibold text-blue-700">
+                      🏢 For Agents:
+                    </p>
+                    <p>• Top 10: Lifetime Zero Subscription + Brand Kit</p>
+                    <p>• 4+ Referrals: Premium Feature Discounts</p>
+                  </div>
+                  <div className="text-left">
+                    <p className="font-semibold text-green-700">
+                      🏠 For Renters:
+                    </p>
+                    <p>• Top 30: Brand Kit (T-Shirt, Key Holder & more)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Features Section */}
       <section className="py-20 bg-gray-50">
@@ -394,9 +547,17 @@ export default function WaitlistPage() {
             management in Nigeria.
           </p>
 
+          {referralCode && (
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 max-w-md mx-auto mb-6">
+              <p className="text-blue-700 text-sm font-medium text-center">
+                🎉 You&apos;re joining through a referral link!
+              </p>
+            </div>
+          )}
+
           {!isSubmitted && (
             <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 mb-3">
                 <input
                   type="email"
                   name="email"
@@ -414,6 +575,13 @@ export default function WaitlistPage() {
                   {isSubmitting ? "Joining..." : "Join Waitlist"}
                 </button>
               </div>
+              {submitError && (
+                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-3 text-center">
+                  <p className="text-red-700 text-xs font-medium">
+                    {submitError}
+                  </p>
+                </div>
+              )}
             </form>
           )}
         </div>
@@ -431,5 +599,27 @@ export default function WaitlistPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function WaitlistPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-white flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-[#FF5F1F] to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-sm">R</span>
+            </div>
+            <p className="text-gray-600">Loading waitlist...</p>
+            <div className="mt-4">
+              <div className="w-8 h-8 border-4 border-[#FF5F1F] border-t-transparent rounded-full animate-spin mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <WaitlistContent />
+    </Suspense>
   );
 }
