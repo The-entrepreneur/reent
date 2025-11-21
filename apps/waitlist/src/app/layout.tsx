@@ -15,7 +15,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://reent.vercel.app"),
-  title: "Reent - Join the Waitlist | Property Rental Marketplace",
+  title: "Reent - Join the Waitlist | #1 Home Rental Marketplace",
   description:
     "Be the first to experience Reent - Because finding, renting, and managing properties in Nigeria should be effortless — and with Reent, it finally is.",
   keywords: [
@@ -34,17 +34,17 @@ export const metadata: Metadata = {
 
   // Open Graph (Facebook, LinkedIn, etc.)
   openGraph: {
-    title: "Reent - Join the Waitlist | Property Rental Marketplace",
+    title: "Reent - Join the Waitlist | #1 Home Rental Marketplace",
     description:
       "Built for Nigeria. Designed for trust. Powered by innovation. Join thousands already waiting for the future of property rental.",
     url: "https://reent.vercel.app",
     siteName: "Reent",
     images: [
       {
-        url: "/assets/soc-preview1.png",
+        url: "/assets/soc-preview2.png",
         width: 1200,
         height: 630,
-        alt: "Reent - Property Rental Marketplace",
+        alt: "Reent - #1 Home Rental Marketplace",
       },
     ],
     locale: "en_NG",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     description:
       "Built for Nigeria. Designed for trust. Powered by innovation. Join the future of property rental.",
     creator: "@Reent_App",
-    images: ["/assets/soc-preview1.png"],
+    images: ["/assets/soc-preview2.png"],
   },
 
   // Additional meta tags
