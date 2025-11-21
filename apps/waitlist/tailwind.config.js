@@ -8,78 +8,73 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50: "#fff7ed",
-          100: "#ffedd5",
-          200: "#fed7aa",
-          300: "#fdba74",
-          400: "#fb923c",
-          500: "#f97316",
-          600: "#ea580c",
-          700: "#c2410c",
-          800: "#9a3412",
-          900: "#7c2d12",
+        // Brand Palette - Following 60-30-10 Rule
+        // 60% - Dominant Color (White/Background)
+        background: {
+          light: "#D6D6D6", // Light theme background
+          dark: "#202020", // Dark theme background
         },
-        secondary: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          300: "#93c5fd",
-          400: "#60a5fa",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
-          800: "#1e40af",
-          900: "#1e3a8a",
+        // 30% - Secondary Color (Black/Text & UI)
+        foreground: {
+          light: "#202020", // Light theme text
+          dark: "#D6D6D6", // Dark theme text
+          muted: "#333533", // Muted foreground for borders
         },
+        // 10% - Accent Colors (Yellow/Pop)
         accent: {
-          50: "#fef2f2",
-          100: "#fee2e2",
-          200: "#fecaca",
-          300: "#fca5a5",
-          400: "#f87171",
-          500: "#ef4444",
-          600: "#dc2626",
-          700: "#b91c1c",
-          800: "#991b1b",
-          900: "#7f1d1d",
+          primary: "#FFEE32", // Vibrant yellow
+          secondary: "#FFD100", // Golden yellow
+          muted: "#333533", // Dark gray for contrast
         },
+        // Semantic colors for consistency
+        brand: {
+          50: "#D6D6D6", // Light background
+          100: "#FFEE32", // Primary accent
+          200: "#FFD100", // Secondary accent
+          300: "#202020", // Dark text/UI
+          400: "#333533", // Muted dark
+        },
+        // Functional colors
         success: {
           50: "#f0fdf4",
           100: "#dcfce7",
-          200: "#bbf7d0",
-          300: "#86efac",
-          400: "#4ade80",
           500: "#22c55e",
           600: "#16a34a",
-          700: "#15803d",
-          800: "#166534",
-          900: "#14532d",
         },
-        orange: {
-          50: "#fff7ed",
-          100: "#ffedd5",
-          200: "#fed7aa",
-          300: "#fdba74",
-          400: "#fb923c",
-          500: "#f97316",
-          600: "#ea580c",
-          700: "#c2410c",
-          800: "#9a3412",
-          900: "#7c2d12",
+        error: {
+          50: "#fef2f2",
+          100: "#fee2e2",
+          500: "#ef4444",
+          600: "#dc2626",
         },
-        custom: {
-          orange: "#FF5F1F",
+        warning: {
+          50: "#fffbeb",
+          100: "#fef3c7",
+          500: "#f59e0b",
+          600: "#d97706",
         },
       },
       fontFamily: {
+        // Familjen Grotesk as primary font
         sans: [
+          "Familjen Grotesk",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
           "Roboto",
           "sans-serif",
+        ],
+        // Monospace fallback
+        mono: [
+          "ui-monospace",
+          "SFMono-Regular",
+          "Menlo",
+          "Monaco",
+          "Consolas",
+          "Liberation Mono",
+          "Courier New",
+          "monospace",
         ],
       },
       fontSize: {
@@ -119,6 +114,7 @@ module.exports = {
         "slide-up": "slideUp 0.3s ease-out",
         "bounce-subtle": "bounceSubtle 2s infinite",
         "pulse-subtle": "pulseSubtle 2s infinite",
+        "glow-accent": "glowAccent 3s ease-in-out infinite",
       },
       keyframes: {
         fadeIn: {
@@ -137,15 +133,25 @@ module.exports = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.7" },
         },
+        glowAccent: {
+          "0%, 100%": {
+            boxShadow: "0 0 5px #FFEE32, 0 0 10px #FFEE32, 0 0 15px #FFEE32",
+          },
+          "50%": {
+            boxShadow: "0 0 10px #FFEE32, 0 0 20px #FFEE32, 0 0 30px #FFEE32",
+          },
+        },
       },
       boxShadow: {
-        soft: "0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)",
+        soft: "0 2px 15px -3px rgba(32, 32, 32, 0.07), 0 10px 20px -2px rgba(32, 32, 32, 0.04)",
         medium:
-          "0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+          "0 4px 25px -5px rgba(32, 32, 32, 0.1), 0 10px 10px -5px rgba(32, 32, 32, 0.04)",
         large:
-          "0 10px 40px -10px rgba(0, 0, 0, 0.15), 0 2px 10px -2px rgba(0, 0, 0, 0.05)",
-        xl: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-        "2xl": "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+          "0 10px 40px -10px rgba(32, 32, 32, 0.15), 0 2px 10px -2px rgba(32, 32, 32, 0.05)",
+        xl: "0 20px 25px -5px rgba(32, 32, 32, 0.1), 0 10px 10px -5px rgba(32, 32, 32, 0.04)",
+        "2xl": "0 25px 50px -12px rgba(32, 32, 32, 0.25)",
+        accent: "0 0 20px rgba(255, 238, 50, 0.3)",
+        "accent-glow": "0 0 30px rgba(255, 238, 50, 0.5)",
       },
       borderRadius: {
         "4xl": "2rem",
@@ -166,13 +172,15 @@ module.exports = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        "gradient-orange": "linear-gradient(135deg, #FF5F1F 0%, #ea580c 100%)",
-        "gradient-orange-light":
-          "linear-gradient(135deg, #fff7ed 0%, #ffffff 50%, #fff7ed 100%)",
-        "gradient-orange-blue":
-          "linear-gradient(135deg, #fff7ed 0%, #ffffff 50%, #eff6ff 100%)",
+        "gradient-brand": "linear-gradient(135deg, #FFEE32 0%, #FFD100 100%)",
+        "gradient-brand-reverse":
+          "linear-gradient(135deg, #FFD100 0%, #FFEE32 100%)",
         "gradient-light":
-          "linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f8fafc 100%)",
+          "linear-gradient(135deg, #D6D6D6 0%, #FFFFFF 50%, #D6D6D6 100%)",
+        "gradient-dark":
+          "linear-gradient(135deg, #202020 0%, #333533 50%, #202020 100%)",
+        "gradient-accent":
+          "linear-gradient(135deg, #FFEE32 0%, #FFD100 50%, #FFEE32 100%)",
       },
       backdropBlur: {
         xs: "2px",
@@ -191,6 +199,22 @@ module.exports = {
         wide: "0.025em",
         wider: "0.05em",
         widest: "0.1em",
+      },
+      // Custom utilities for the 60-30-10 rule
+      backgroundColor: {
+        "brand-60": "#D6D6D6",
+        "brand-30": "#202020",
+        "brand-10": "#FFEE32",
+      },
+      textColor: {
+        "brand-60": "#D6D6D6",
+        "brand-30": "#202020",
+        "brand-10": "#FFEE32",
+      },
+      borderColor: {
+        "brand-60": "#D6D6D6",
+        "brand-30": "#202020",
+        "brand-10": "#FFEE32",
       },
     },
   },

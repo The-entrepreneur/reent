@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { isValidReferralCode } from "@/lib/referral";
@@ -37,19 +39,23 @@ export default function ReferralPage() {
   }, [referralCode, router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 flex items-center justify-center">
+    <div className="min-h-screen bg-background-light flex items-center justify-center">
       <div className="text-center">
-        <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-[#FF5F1F] to-orange-600 rounded-full flex items-center justify-center shadow-lg">
-          <span className="text-white font-bold text-sm">R</span>
-        </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <Image
+          src="/assets/logo/nameOnly.svg"
+          alt="Reent"
+          width={150}
+          height={45}
+          className="h-12 w-auto mx-auto mb-4"
+        />
+        <h1 className="text-2xl font-bold text-foreground-light mb-2">
           Processing Referral...
         </h1>
-        <p className="text-gray-600">
+        <p className="text-foreground-secondary">
           Redirecting you to the waitlist page
         </p>
         <div className="mt-6">
-          <div className="w-8 h-8 border-4 border-[#FF5F1F] border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <div className="w-8 h-8 border-4 border-accent-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
         </div>
       </div>
     </div>

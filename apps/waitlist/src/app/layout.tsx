@@ -33,6 +33,11 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_NG",
   },
+  icons: {
+    icon: "/assets/favicon/Favicon-Yvr-A512%20x%20512.svg",
+    shortcut: "/assets/favicon/Favicon-Yvr-A512%20x%20512.svg",
+    apple: "/assets/favicon/Favicon-Yvr-A512%20x%20512.svg",
+  },
 };
 
 export default function RootLayout({
