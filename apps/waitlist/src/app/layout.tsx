@@ -14,7 +14,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("http://localhost:3001"),
+  metadataBase: new URL("https://reent.vercel.app"),
   title: "Reent - Join the Waitlist | Property Rental Marketplace",
   description:
     "Be the first to experience Reent - Because finding, renting, and managing properties in Nigeria should be effortless — and with Reent, it finally is.",
@@ -24,15 +24,57 @@ export const metadata: Metadata = {
     "Nigeria",
     "real estate",
     "early access",
+    "rental platform",
+    "property management",
+    "Nigerian real estate",
   ],
   authors: [{ name: "Reent" }],
+  creator: "Reent",
+  publisher: "Reent",
+
+  // Open Graph (Facebook, LinkedIn, etc.)
   openGraph: {
     title: "Reent - Join the Waitlist | Property Rental Marketplace",
     description:
-      "Built for Nigeria. Designed for trust. Powered by innovation.",
-    type: "website",
+      "Built for Nigeria. Designed for trust. Powered by innovation. Join thousands already waiting for the future of property rental.",
+    url: "https://reent.vercel.app",
+    siteName: "Reent",
+    images: [
+      {
+        url: "/assets/soc-preview1.png",
+        width: 1200,
+        height: 630,
+        alt: "Reent - Property Rental Marketplace",
+      },
+    ],
     locale: "en_NG",
+    type: "website",
   },
+
+  // Twitter Card
+  twitter: {
+    card: "summary_large_image",
+    title: "Reent - Join the Waitlist | #1 Home Rental Marketplace",
+    description:
+      "Built for Nigeria. Designed for trust. Powered by innovation. Join the future of property rental.",
+    creator: "@Reent_App",
+    images: ["/assets/soc-preview1.png"],
+  },
+
+  // Additional meta tags
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+
+  // Icons
   icons: {
     icon: "/assets/favicon/Favicon-Yvr-A512%20x%20512.svg",
     shortcut: "/assets/favicon/Favicon-Yvr-A512%20x%20512.svg",
