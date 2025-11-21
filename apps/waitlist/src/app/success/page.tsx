@@ -272,7 +272,7 @@ export default function SuccessPage() {
       </section>
 
       {/* Leaderboard Section */}
-      {showLeaderboard && leaderboard.length > 0 && (
+      {showLeaderboard && (
         <section className="py-12 bg-gradient-to-br from-accent-muted to-background-light border-t border-b border-accent-primary">
           <div className="max-w-4xl mx-auto px-6">
             <div className="text-center mb-8">
@@ -284,59 +284,72 @@ export default function SuccessPage() {
               </p>
             </div>
 
-            <div className="bg-background-light rounded-2xl border-2 border-foreground-muted shadow-large overflow-hidden">
-              <div className="grid grid-cols-12 gap-4 p-6 bg-foreground-muted border-b border-foreground-light font-semibold text-background-light">
-                <div className="col-span-1">Rank</div>
-                <div className="col-span-6">Name</div>
-                <div className="col-span-3">Role</div>
-                <div className="col-span-2 text-right">Referrals</div>
-              </div>
-
-              {leaderboard.map((user, index) => (
-                <div
-                  key={index}
-                  className={`grid grid-cols-12 gap-4 p-6 border-b border-foreground-muted last:border-b-0 ${
-                    index < 3
-                      ? "bg-gradient-to-r from-accent-muted to-background-light"
-                      : ""
-                  }`}
-                >
-                  <div className="col-span-1 flex items-center">
-                    {index === 0 && (
-                      <Trophy className="w-5 h-5 text-accent-primary" />
-                    )}
-                    {index === 1 && (
-                      <Trophy className="w-5 h-5 text-foreground-muted" />
-                    )}
-                    {index === 2 && (
-                      <Trophy className="w-5 h-5 text-accent-secondary" />
-                    )}
-                    {index > 2 && (
-                      <span className="text-foreground-muted font-medium">
-                        {index + 1}
-                      </span>
-                    )}
-                  </div>
-                  <div className="col-span-6 font-medium text-foreground-light">
-                    {user.masked_name}
-                  </div>
-                  <div className="col-span-3">
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                        user.role === "agent"
-                          ? "bg-foreground-light text-background-light"
-                          : "bg-accent-primary text-foreground-light"
-                      }`}
-                    >
-                      {user.role === "agent" ? "🏢 Agent" : "🏠 Renter"}
-                    </span>
-                  </div>
-                  <div className="col-span-2 text-right font-bold text-accent-primary">
-                    {user.referral_count}
-                  </div>
+            {leaderboard.length > 0 ? (
+              <div className="bg-background-light rounded-2xl border-2 border-foreground-muted shadow-large overflow-hidden">
+                <div className="grid grid-cols-12 gap-4 p-6 bg-foreground-muted border-b border-foreground-light font-semibold text-background-light">
+                  <div className="col-span-1">Rank</div>
+                  <div className="col-span-6">Name</div>
+                  <div className="col-span-3">Role</div>
+                  <div className="col-span-2 text-right">Referrals</div>
                 </div>
-              ))}
-            </div>
+
+                {leaderboard.map((user, index) => (
+                  <div
+                    key={index}
+                    className={`grid grid-cols-12 gap-4 p-6 border-b border-foreground-muted last:border-b-0 ${
+                      index < 3
+                        ? "bg-gradient-to-r from-accent-muted to-background-light"
+                        : ""
+                    }`}
+                  >
+                    <div className="col-span-1 flex items-center">
+                      {index === 0 && (
+                        <Trophy className="w-5 h-5 text-accent-primary" />
+                      )}
+                      {index === 1 && (
+                        <Trophy className="w-5 h-5 text-foreground-muted" />
+                      )}
+                      {index === 2 && (
+                        <Trophy className="w-5 h-5 text-accent-secondary" />
+                      )}
+                      {index > 2 && (
+                        <span className="text-foreground-muted font-medium">
+                          {index + 1}
+                        </span>
+                      )}
+                    </div>
+                    <div className="col-span-6 font-medium text-foreground-light">
+                      {user.masked_name}
+                    </div>
+                    <div className="col-span-3">
+                      <span
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                          user.role === "agent"
+                            ? "bg-foreground-light text-background-light"
+                            : "bg-accent-primary text-foreground-light"
+                        }`}
+                      >
+                        {user.role === "agent" ? "🏢 Agent" : "🏠 Renter"}
+                      </span>
+                    </div>
+                    <div className="col-span-2 text-right font-bold text-accent-primary">
+                      {user.referral_count}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-background-light rounded-2xl border-2 border-foreground-muted shadow-large overflow-hidden p-8 text-center">
+                <Trophy className="w-12 h-12 text-foreground-muted mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-foreground-light mb-2">
+                  No Active Referrers Yet
+                </h3>
+                <p className="text-foreground-secondary">
+                  Be the first to refer friends and appear on the leaderboard!
+                  Share your referral link to get started.
+                </p>
+              </div>
+            )}
 
             {/* Rewards Info */}
             <div className="mt-8 text-center">

@@ -123,6 +123,7 @@ export async function getLeaderboard(): Promise<
     const { data, error } = await supabase
       .from("waitlist")
       .select("full_name, role, referral_count")
+      .gt("referral_count", 4)
       .order("referral_count", { ascending: false })
       .limit(10);
 
