@@ -1,8 +1,10 @@
 """FastAPI application entry point"""
 
+from app.api.v1.auth import router as auth_router
+from app.api.v1.verification import router as verification_router
+from app.core.config import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import settings
 
 app = FastAPI(
     title="Reent API",
@@ -21,6 +23,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include API routers
+app.include_router(auth_router, prefix="/api/v1/auth", tags=["authentication"])
+app.include_router(
+    verification_router, prefix="/api/v1/verification", tags=["verification"]
+)
+
 
 @app.get("/health")
 async def health_check():
@@ -28,7 +36,7 @@ async def health_check():
     return {
         "status": "healthy",
         "environment": settings.ENVIRONMENT,
-        "database": "connected",  # TODO: Add actual DB check
+        "version": "1.0.0",
     }
 
 
@@ -36,7 +44,8 @@ async def health_check():
 async def root():
     """Root endpoint"""
     return {
-        "message": "Reent API - Local Development",
+        "message": "Reent API - Nigerian Property Rental Platform",
         "version": "1.0.0",
         "docs": "/docs",
+        "health": "/health",
     }

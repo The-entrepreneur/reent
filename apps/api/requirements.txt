@@ -30,3 +30,7 @@ boto3==1.29.7  # For MinIO (S3-compatible)
 # Utilities
 python-dotenv==1.0.0
 email-validator==2.1.0
+
+# Name Matching
+fuzzywuzzy==0.18.0
+python-Levenshtein==0.25.1

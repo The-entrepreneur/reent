@@ -1,7 +1,8 @@
 """Application configuration"""
 
+from typing import List, Optional
+
 from pydantic_settings import BaseSettings
-from typing import List
 
 
 class Settings(BaseSettings):
@@ -42,6 +43,9 @@ class Settings(BaseSettings):
     # Mock flags
     MOCK_YOUVERIFY: bool = True
     MOCK_PAYSTACK: bool = True
+
+    # Youverify API
+    YOUVERIFY_API_KEY: Optional[str] = None
 
     class Config:
         env_file = ".env"
