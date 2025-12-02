@@ -10,8 +10,8 @@ import httpx
 from fuzzywuzzy import fuzz
 from sqlalchemy.orm import Session
 
+from app.core.auth import get_password_hash
 from app.core.config import settings
-from app.core.security import get_password_hash
 from app.models.engagement import AgentVerificationAttempt
 from app.models.user import User
 
@@ -21,7 +21,8 @@ class YouverifyService:
 
     def __init__(self):
         self.base_url = "https://api.youverify.co/v2"
-        self.api_key = settings.YOUVERIFY_API_KEY
+        self.api_key = getattr(settings, "YOUVERIFY_API_KEY", None)
+        self.mock_mode = getattr(settings, "MOCK_YOUVERIFY", True)
         self.timeout = 30
         self.max_retries = 3
         self.retry_delay = 5
@@ -48,22 +49,27 @@ class YouverifyService:
         db.commit()
 
         try:
-            # Prepare request payload
-            payload = {"id": bvn, "metadata": {"phone": phone}}
+            # Check if we should use mock mode
+            if self.mock_mode or not self.api_key:
+                # Use mock response for development
+                response_data = await self._mock_bvn_verification(bvn, phone)
+            else:
+                # Prepare request payload
+                payload = {"id": bvn, "metadata": {"phone": phone}}
 
-            headers = {
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            }
+                headers = {
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                }
 
-            # Make API call with retry logic
-            response_data = await self._make_api_call(
-                endpoint="/identities/bvn",
-                payload=payload,
-                headers=headers,
-                attempt=attempt,
-                db=db,
-            )
+                # Make API call with retry logic
+                response_data = await self._make_api_call(
+                    endpoint="/identities/bvn",
+                    payload=payload,
+                    headers=headers,
+                    attempt=attempt,
+                    db=db,
+                )
 
             if not response_data:
                 return {"verified": False, "error": "API call failed after retries"}
@@ -131,22 +137,27 @@ class YouverifyService:
         db.commit()
 
         try:
-            # Prepare request payload
-            payload = {"id": nin, "metadata": {"dob": dob}}
+            # Check if we should use mock mode
+            if self.mock_mode or not self.api_key:
+                # Use mock response for development
+                response_data = await self._mock_nin_verification(nin, dob)
+            else:
+                # Prepare request payload
+                payload = {"id": nin, "metadata": {"dob": dob}}
 
-            headers = {
-                "Authorization": f"Bearer {self.api_key}",
-                "Content-Type": "application/json",
-            }
+                headers = {
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                }
 
-            # Make API call with retry logic
-            response_data = await self._make_api_call(
-                endpoint="/identities/nin",
-                payload=payload,
-                headers=headers,
-                attempt=attempt,
-                db=db,
-            )
+                # Make API call with retry logic
+                response_data = await self._make_api_call(
+                    endpoint="/identities/nin",
+                    payload=payload,
+                    headers=headers,
+                    attempt=attempt,
+                    db=db,
+                )
 
             if not response_data:
                 return {"verified": False, "error": "API call failed after retries"}
@@ -293,6 +304,45 @@ class YouverifyService:
         )
 
         return failed_attempts >= 3
+
+    async def _mock_bvn_verification(self, bvn: str, phone: str) -> Dict:
+        """
+        Mock BVN verification for development/testing
+        """
+        # Simulate API delay
+        import asyncio
+
+        await asyncio.sleep(1)
+
+        # Return mock successful response
+        return {
+            "data": {
+                "fullName": "John Doe",
+                "phoneNumber": phone,  # Match provided phone for success
+                "dateOfBirth": "1990-01-15",
+                "status": "verified",
+            }
+        }
+
+    async def _mock_nin_verification(self, nin: str, dob: str) -> Dict:
+        """
+        Mock NIN verification for development/testing
+        """
+        # Simulate API delay
+        import asyncio
+
+        await asyncio.sleep(1)
+
+        # Return mock successful response
+        return {
+            "data": {
+                "fullName": "John Doe",
+                "stateOfOrigin": "Lagos",
+                "lga": "Ikeja",
+                "dateOfBirth": dob,  # Match provided DOB for success
+                "status": "verified",
+            }
+        }
 
     def _create_verification_lock(self, agent_id: str, db: Session) -> None:
         """

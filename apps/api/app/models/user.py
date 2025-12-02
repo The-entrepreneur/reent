@@ -4,6 +4,7 @@ import uuid
 
 from sqlalchemy import Boolean, Column, DateTime, String, Text
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.models.base import Base
@@ -28,6 +29,59 @@ class User(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
     last_login = Column(DateTime(timezone=True))
+
+    # Relationships
+    property_flicks = relationship(
+        "PropertyFlick", back_populates="user", cascade="all, delete-orphan"
+    )
+    property_clips = relationship(
+        "PropertyClip", back_populates="user", cascade="all, delete-orphan"
+    )
+    property_reports = relationship(
+        "PropertyReport",
+        foreign_keys="PropertyReport.reported_by",
+        back_populates="reporter",
+        cascade="all, delete-orphan",
+    )
+    agent_reviews_received = relationship(
+        "AgentReview",
+        foreign_keys="AgentReview.agent_id",
+        back_populates="agent",
+        cascade="all, delete-orphan",
+    )
+    agent_reviews_given = relationship(
+        "AgentReview",
+        foreign_keys="AgentReview.tenant_id",
+        back_populates="tenant",
+        cascade="all, delete-orphan",
+    )
+    notifications = relationship(
+        "Notification", back_populates="user", cascade="all, delete-orphan"
+    )
+    verification_attempts = relationship(
+        "AgentVerificationAttempt", back_populates="agent", cascade="all, delete-orphan"
+    )
+    property_shares = relationship(
+        "PropertyShare", back_populates="sharer", cascade="all, delete-orphan"
+    )
+    performance_metrics = relationship(
+        "AgentPerformance", back_populates="agent", cascade="all, delete-orphan"
+    )
+    inspections_as_tenant = relationship(
+        "Inspection",
+        foreign_keys="Inspection.tenant_id",
+        back_populates="tenant",
+        cascade="all, delete-orphan",
+    )
+    inspections_as_agent = relationship(
+        "Inspection",
+        foreign_keys="Inspection.agent_id",
+        back_populates="agent",
+        cascade="all, delete-orphan",
+    )
+    inspection_proofs = relationship(
+        "InspectionProof", back_populates="user", cascade="all, delete-orphan"
+    )
 
     def __repr__(self):
         return f"<User(id={self.id}, email={self.email}, role={self.role})>"

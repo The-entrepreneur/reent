@@ -7,8 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 
-from app.core.auth import get_current_user
-from app.core.security import get_password_hash
+from app.core.auth import get_current_user, get_password_hash
 from app.models.base import get_db
 from app.models.engagement import AgentVerificationAttempt
 from app.models.user import User

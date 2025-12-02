@@ -15,7 +15,7 @@ class VerificationInitiate(BaseModel):
     dob: str = Field(..., description="Date of birth (YYYY-MM-DD format)")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "bvn": "12345678901",
                 "phone": "08012345678",
@@ -40,7 +40,7 @@ class VerificationResponse(BaseModel):
     )
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "success": True,
                 "message": "Verification completed successfully",
@@ -73,7 +73,7 @@ class VerificationStatusResponse(BaseModel):
     is_locked: bool = Field(..., description="Whether verification is currently locked")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "verification_status": "verified",
                 "credibility_score": 50,
@@ -103,7 +103,7 @@ class VerificationAttempt(BaseModel):
     last_attempt_at: Optional[str] = Field(None, description="Last attempt timestamp")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": "123e4567-e89b-12d3-a456-426614174000",
                 "attempt_type": "bvn",
@@ -125,7 +125,7 @@ class VerificationLockStatus(BaseModel):
     max_attempts: int = Field(..., description="Maximum allowed attempts")
 
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "is_locked": False,
                 "locked_until": None,

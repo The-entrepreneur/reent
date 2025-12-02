@@ -40,7 +40,7 @@ class PropertyFlick(Base):
     )
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Relationships
+    # Relationships - use string references to avoid circular imports
     property = relationship("Property", back_populates="flicks")
     user = relationship("User", back_populates="property_flicks")
 
@@ -70,7 +70,7 @@ class PropertyClip(Base):
     )
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Relationships
+    # Relationships - use string references to avoid circular imports
     property = relationship("Property", back_populates="clips")
     user = relationship("User", back_populates="property_clips")
 
@@ -103,7 +103,7 @@ class PropertyReport(Base):
     reviewed_at = Column(DateTime(timezone=True))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Relationships
+    # Relationships - use string references to avoid circular imports
     property = relationship("Property", back_populates="reports")
     reporter = relationship(
         "User", foreign_keys=[reported_by], back_populates="property_reports"
@@ -152,7 +152,7 @@ class AgentReview(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    # Relationships
+    # Relationships - use string references to avoid circular imports
     agent = relationship(
         "User", foreign_keys=[agent_id], back_populates="agent_reviews_received"
     )
@@ -192,7 +192,7 @@ class Notification(Base):
     expires_at = Column(DateTime(timezone=True))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Relationships
+    # Relationships - use string references to avoid circular imports
     user = relationship("User", back_populates="notifications")
 
     __table_args__ = (
@@ -254,7 +254,7 @@ class AgentVerificationAttempt(Base):
     last_attempt_at = Column(DateTime(timezone=True), server_default=func.now())
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Relationships
+    # Relationships - use string references to avoid circular imports
     agent = relationship("User", back_populates="verification_attempts")
 
     __table_args__ = (
@@ -292,7 +292,7 @@ class PropertyShare(Base):
     clicked_at = Column(DateTime(timezone=True))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Relationships
+    # Relationships - use string references to avoid circular imports
     property = relationship("Property", back_populates="shares")
     sharer = relationship("User", back_populates="property_shares")
 
@@ -330,7 +330,7 @@ class AgentPerformance(Base):
     avg_response_time_minutes = Column(Numeric(8, 2))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Relationships
+    # Relationships - use string references to avoid circular imports
     agent = relationship("User", back_populates="performance_metrics")
 
     __table_args__ = (

@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 from sqlalchemy import Boolean, Column, DateTime, Integer, Numeric, String, Text
 from sqlalchemy.dialects.postgresql import ARRAY, UUID
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.models.base import Base
@@ -38,6 +39,23 @@ class Property(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+    # Relationships
+    flicks = relationship(
+        "PropertyFlick", back_populates="property", cascade="all, delete-orphan"
+    )
+    clips = relationship(
+        "PropertyClip", back_populates="property", cascade="all, delete-orphan"
+    )
+    reports = relationship(
+        "PropertyReport", back_populates="property", cascade="all, delete-orphan"
+    )
+    shares = relationship(
+        "PropertyShare", back_populates="property", cascade="all, delete-orphan"
+    )
+    inspections = relationship(
+        "Inspection", back_populates="property", cascade="all, delete-orphan"
     )
 
     def __init__(self, *args, **kwargs):
